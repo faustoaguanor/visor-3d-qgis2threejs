@@ -551,13 +551,21 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		}
 
+		// El zoom es proporcional al desplazamiento de la rueda: una muesca de ratón
+		// (deltaY = 100) equivale a un paso; el trackpad, que emite muchos eventos
+		// pequeños, ya no multiplica el zoom. Pellizco (ctrlKey) amplificado x10.
+		if ( event.deltaMode === 1 ) delta *= 33;
+		if ( event.ctrlKey ) delta *= 10;
+
+		var steps = Math.min( Math.abs( delta ) / 100, 2 );
+
 		if ( delta < 0 ) {
 
-			dollyOut( getZoomScale() );
+			dollyOut( Math.pow( 0.95, scope.zoomSpeed * steps ) );
 
 		} else if ( delta > 0 ) {
 
-			dollyIn( getZoomScale() );
+			dollyIn( Math.pow( 0.95, scope.zoomSpeed * steps ) );
 
 		}
 
