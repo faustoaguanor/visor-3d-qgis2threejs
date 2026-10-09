@@ -342,13 +342,19 @@ table.measure tr > td:nth-child(2) { text-align: right; font-variant-numeric: ta
   position: absolute;
   left: 14px;
   bottom: 14px;
-  width: 76px; height: 76px;
+  width: 64px; height: 64px;
   z-index: 1000;
   pointer-events: none;
   border-radius: 50%;
-  background: rgba(255, 255, 255, .8);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, .92);
+  box-shadow: var(--shadow);
 }
+#northarrow svg { display: block; width: 100%; height: 100%; }
+#northarrow .c-ring { fill: none; stroke: var(--border); stroke-width: 1.5; }
+#northarrow .c-n { fill: #d64545; }
+#northarrow .c-s { fill: #9a9a9a; }
+#northarrow .c-pin { fill: #fff; }
+#northarrow .c-label { font: 700 9px var(--font); fill: var(--text); }
 
 #navigation {
   position: absolute;
@@ -358,24 +364,59 @@ table.measure tr > td:nth-child(2) { text-align: right; font-variant-numeric: ta
   z-index: 1000;
 }
 
-/* ---------- dat.GUI panel ---------- */
+/* ---------- dat.GUI panel (tema claro, igual que la barra superior) ---------- */
 .dg.ac { top: var(--appbar-h) !important; }
 .dg.main {
   margin-top: 8px !important;
   margin-right: 8px !important;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
   font-family: var(--font);
 }
-.dg.main .close-button { border-radius: 0; background-color: var(--text); }
-.dg, .dg .cr .property-name { font-size: 12px; }
-.dg li.title { background-color: #4a4a4a !important; font-weight: 600; }
-.dg .c .slider-fg { background-color: var(--blue) !important; }
-.dg .c .slider:hover .slider-fg { background-color: var(--blue-hover) !important; }
+.dg, .dg .cr .property-name { font-size: 13px; }
+.dg { color: var(--text); text-shadow: none !important; }
+.dg.main .close-button {
+  background-color: var(--surface-2) !important;
+  color: var(--blue) !important;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  height: 32px; line-height: 32px;
+  font-size: 12px;
+}
+.dg.main .close-button:hover { background-color: var(--blue-tint) !important; }
+.dg li.title::before {
+  content: ""; position: absolute; left: 12px; top: 50%;
+  border: 4px solid transparent; border-top: 5px solid var(--text-muted); margin-top: -2px;
+}
+.dg .closed li.title::before { border: 4px solid transparent; border-left: 5px solid var(--text-muted); margin-top: -4px; }
+.dg li.title {
+  padding-left: 26px !important;
+  background: var(--surface-2) !important;
+  position: relative;
+  color: var(--text);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.dg li:not(.folder), .dg .cr.function, .dg .cr.boolean, .dg .cr.number, .dg .cr.string { background: var(--surface) !important; border-bottom: 1px solid var(--surface-3); color: var(--text); }
+.dg li.save-row { background: var(--surface-2); }
+.dg li:not(.folder):hover, .dg li.title:hover { background: var(--blue-tint) !important; }
+.dg .cr.boolean, .dg .cr.function, .dg .cr.number, .dg .cr.string { border-left: 3px solid var(--border); }
 .dg .cr.number { border-left-color: var(--blue) !important; }
-.dg .cr.boolean { border-left-color: #8a8a8a !important; }
-.dg .cr.function { border-left-color: #8a8a8a !important; }
+.dg .cr.function { cursor: pointer; }
+.dg .cr.function:hover { background: var(--blue-tint) !important; }
+.dg .cr.function .property-name { color: var(--blue); font-weight: 500; }
+.dg .cr.function { border-left-color: var(--blue) !important; }
+.dg .c .slider { background: var(--surface-3); border-radius: 2px; }
+.dg .c .slider-fg { background-color: var(--blue) !important; border-radius: 2px; }
+.dg .c .slider:hover .slider-fg { background-color: var(--blue-hover) !important; }
+.dg .c input[type=text] { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); border-radius: 2px; }
+.dg .c input[type=text]:hover, .dg .c input[type=text]:focus { background: #fff; outline: 1px solid var(--blue); }
+.dg .c select { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+.dg .c input[type=checkbox] { accent-color: var(--blue); }
+.dg.main ul.closed li:not(.title) { display: none; }
 
 /* ---------- animation ---------- */
 #narrativebox {
@@ -449,5 +490,5 @@ table.measure tr > td:nth-child(2) { text-align: right; font-variant-numeric: ta
   .stat-credits { display: none; }
   #popup { min-width: 0; left: 8px; right: 8px; max-width: none; }
   #navigation { width: 96px; height: 96px; }
-  #northarrow { width: 60px; height: 60px; }
+  #northarrow { width: 52px; height: 52px; }
 }
