@@ -12,32 +12,78 @@
   body { overflow-y: auto; background: var(--surface-2); }
   .appbar { position: sticky; padding-left: 16px; }
   .appbar-titles h1 { font-size: 16px; }
+  .appbar-actions a {
+    display: inline-flex; align-items: center; height: 36px; padding: 0 10px;
+    color: var(--blue); font-size: 13px; text-decoration: none;
+  }
+  .appbar-actions a:hover { background: var(--blue-tint); }
 
-  main { max-width: 960px; margin: 0 auto; padding: 32px 16px 48px; }
-  main > h2 { margin: 0 0 4px; font-size: 22px; font-weight: 600; }
-  main > p { margin: 0 0 24px; color: var(--text-muted); max-width: 640px; line-height: 1.5; }
+  .hero { background: var(--surface); border-bottom: 1px solid var(--border); }
+  .hero-in { max-width: 1040px; margin: 0 auto; padding: 44px 20px 40px; }
+  .eyebrow { margin: 0 0 8px; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--blue); }
+  .hero h2 { margin: 0 0 12px; font-size: clamp(26px, 4vw, 36px); line-height: 1.15; font-weight: 600; }
+  .hero p.lead { margin: 0 0 22px; max-width: 620px; font-size: 16px; line-height: 1.55; color: var(--text-muted); }
+  .btn {
+    display: inline-block; padding: 10px 18px; border: 1px solid var(--blue);
+    background: var(--blue); color: #fff; font-size: 14px; font-weight: 600; text-decoration: none;
+    border-radius: var(--radius); transition: background .15s;
+  }
+  .btn:hover, .btn:focus-visible { background: var(--blue-hover); outline: none; }
+  .btn.ghost { background: transparent; color: var(--blue); margin-left: 8px; }
+  .btn.ghost:hover { background: var(--blue-tint); }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .features { display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 26px 0 0; padding: 0; list-style: none; font-size: 13px; color: var(--text-muted); }
+  .features li { display: flex; align-items: center; gap: 8px; }
+  .features svg { width: 18px; height: 18px; fill: var(--blue); flex: none; }
+
+  main { max-width: 1040px; margin: 0 auto; padding: 32px 20px 24px; }
+  main h2.section { margin: 0 0 16px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
 
   .card {
-    display: flex; flex-direction: column;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: inherit; text-decoration: none;
-    transition: box-shadow .15s, border-color .15s;
+    position: relative; display: flex; flex-direction: column;
+    background: var(--surface); border: 1px solid var(--border);
+    color: inherit; text-decoration: none; overflow: hidden;
+    transition: box-shadow .15s, border-color .15s, transform .15s;
   }
-  .card:hover, .card:focus-visible { border-color: var(--blue); box-shadow: var(--shadow); outline: none; }
-  .card img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--surface-3); border-bottom: 1px solid var(--border); }
-  .card-body { padding: 14px 16px 16px; }
-  .card h3 { margin: 0 0 4px; font-size: 16px; font-weight: 600; }
-  .card p { margin: 0 0 12px; font-size: 13px; line-height: 1.45; color: var(--text-muted); }
-  .card .meta { font-size: 12px; color: var(--text-muted); }
-  .card .open { color: var(--blue); font-size: 13px; }
-  .card:hover .open { text-decoration: underline; }
+  .card:hover, .card:focus-visible { border-color: var(--blue); box-shadow: 0 4px 14px rgba(0,0,0,.18); transform: translateY(-2px); outline: none; }
+  .card .thumb { position: relative; overflow: hidden; background: var(--surface-3); border-bottom: 1px solid var(--border); }
+  .card img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; transition: transform .35s; }
+  .card:hover img { transform: scale(1.04); }
+  .badge {
+    position: absolute; top: 10px; left: 10px; padding: 3px 8px;
+    background: rgba(255,255,255,.94); color: var(--text); font-size: 11px; font-weight: 600;
+    letter-spacing: .04em; box-shadow: var(--shadow);
+  }
+  .card-body { display: flex; flex-direction: column; flex: 1; padding: 16px 18px 18px; }
+  .card h3 { margin: 0 0 6px; font-size: 17px; font-weight: 600; }
+  .card p { margin: 0 0 14px; font-size: 13.5px; line-height: 1.5; color: var(--text-muted); }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 16px; padding: 0; list-style: none; }
+  .tags li { padding: 2px 8px; background: var(--surface-2); border: 1px solid var(--border); font-size: 11.5px; color: var(--text-muted); }
+  .card .open { margin-top: auto; display: inline-flex; align-items: center; gap: 6px; color: var(--blue); font-size: 13.5px; font-weight: 600; }
+  .card .open svg { width: 16px; height: 16px; fill: currentColor; transition: transform .15s; }
+  .card:hover .open svg { transform: translateX(4px); }
 
-  footer { max-width: 960px; margin: 0 auto; padding: 0 16px 32px; font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+  .howto { max-width: 1040px; margin: 0 auto; padding: 8px 20px 32px; }
+  .howto h2 { margin: 0 0 16px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .step { background: var(--surface); border: 1px solid var(--border); padding: 14px 16px; font-size: 13.5px; line-height: 1.5; color: var(--text-muted); }
+  .step b { display: block; margin-bottom: 4px; color: var(--text); font-size: 14px; }
+  kbd { display: inline-block; padding: 0 5px; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 3px; background: var(--surface-2); font: 600 11px/1.6 var(--font); }
+
+  footer { border-top: 1px solid var(--border); background: var(--surface); }
+  footer div { max-width: 1040px; margin: 0 auto; padding: 18px 20px; font-size: 12px; color: var(--text-muted); line-height: 1.7; }
   footer a { color: var(--blue); text-decoration: none; }
   footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 560px) {
+    .hero-in { padding: 28px 16px; }
+    .btn.ghost { margin: 8px 0 0; }
+    main, .howto { padding-left: 16px; padding-right: 16px; }
+    .grid { grid-template-columns: 1fr; }
+    .appbar-actions { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -49,35 +95,70 @@
       <p>Qgis2threejs · three.js</p>
     </div>
   </div>
+  <nav class="appbar-actions">
+    <a href="https://github.com/faustoaguanor/visor-3d-qgis2threejs">Código fuente</a>
+  </nav>
 </header>
 
-<main>
-  <h2>Visores 3D</h2>
-  <p>Escenas exportadas desde QGIS y visualizadas en el navegador. Orbita, mide distancias y consulta los atributos de cada elemento.</p>
+<section class="hero">
+  <div class="hero-in">
+    <p class="eyebrow">Geovisualización web</p>
+    <h2>Explora el territorio en 3D</h2>
+    <p class="lead">Escenas exportadas desde QGIS y visualizadas directamente en el navegador, sin instalar nada. Orbita, mide distancias y consulta los atributos de cada elemento.</p>
+    <a class="btn" href="#visores">Ver visores</a><a class="btn ghost" href="#guia">Cómo navegar</a>
+    <ul class="features">
+      <li><svg viewBox="0 0 24 24"><path d="M12 5V2L8 6l4 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>Órbita y zoom libres</li>
+      <li><svg viewBox="0 0 24 24"><path d="M21 6H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1zm-1 10H4V8h2v3h2V8h2v3h2V8h2v3h2V8h2z"/></svg>Medición de distancias</li>
+      <li><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-6h2zm0-8h-2V7h2z"/></svg>Consulta de atributos</li>
+    </ul>
+  </div>
+</section>
 
+<main id="visores">
+  <h2 class="section">Visores disponibles</h2>
   <div class="grid">
     <a class="card" href="armenia/">
-      <img src="shared/thumbs/armenia.jpg" alt="Vista previa del Modelo Digital de Superficie del sector Armenia" loading="lazy">
+      <div class="thumb">
+        <img src="shared/thumbs/armenia.jpg" alt="Vista previa del Modelo Digital de Superficie del sector Armenia" loading="lazy">
+        <span class="badge">TERRENO</span>
+      </div>
       <div class="card-body">
         <h3>Modelo Digital de Superficie</h3>
         <p>Sector Armenia. Terreno y ortofoto con consulta de coordenadas y cotas.</p>
-        <div class="meta"><span class="open">Abrir visor</span> · MDS + ortofoto</div>
+        <ul class="tags"><li>MDS</li><li>Ortofoto</li><li>Cotas</li></ul>
+        <span class="open">Abrir visor <svg viewBox="0 0 24 24"><path d="M12 4l-1.4 1.4 5.6 5.6H4v2h12.2l-5.6 5.6L12 20l8-8z"/></svg></span>
       </div>
     </a>
     <a class="card" href="quito-edificaciones/">
-      <img src="shared/thumbs/quito.jpg" alt="Vista previa de las edificaciones 3D de Quito" loading="lazy">
+      <div class="thumb">
+        <img src="shared/thumbs/quito.jpg" alt="Vista previa de las edificaciones 3D de Quito" loading="lazy">
+        <span class="badge">EDIFICACIONES</span>
+      </div>
       <div class="card-body">
         <h3>Edificaciones 3D</h3>
         <p>Edificaciones de Quito extruidas por altura, con atributos por bloque.</p>
-        <div class="meta"><span class="open">Abrir visor</span> · Polígonos extruidos</div>
+        <ul class="tags"><li>Polígonos extruidos</li><li>Atributos</li><li>Ortofoto</li></ul>
+        <span class="open">Abrir visor <svg viewBox="0 0 24 24"><path d="M12 4l-1.4 1.4 5.6 5.6H4v2h12.2l-5.6 5.6L12 20l8-8z"/></svg></span>
       </div>
     </a>
   </div>
 </main>
 
+<section class="howto" id="guia">
+  <h2>Cómo navegar</h2>
+  <div class="steps">
+    <div class="step"><b>Orbitar</b>Botón izquierdo y arrastrar. Con teclado: <kbd>Shift</kbd> + flechas.</div>
+    <div class="step"><b>Zoom y desplazamiento</b>Rueda del ratón para acercar; botón derecho y arrastrar para desplazar.</div>
+    <div class="step"><b>Consultar</b>Clic sobre un elemento para ver coordenadas y atributos, y medir distancias.</div>
+    <div class="step"><b>Atajos</b><kbd>R</kbd> órbita automática · <kbd>Shift</kbd>+<kbd>R</kbd> vista inicial · <kbd>Shift</kbd>+<kbd>S</kbd> captura.</div>
+  </div>
+</section>
+
 <footer>
-  Elaborado con <a href="https://www.qgis.org/">QGIS</a> y el complemento <a href="https://github.com/minorua/Qgis2threejs">Qgis2threejs</a>; renderizado con <a href="https://threejs.org/">three.js</a>.
-  <a href="https://github.com/faustoaguanor/visor-3d-qgis2threejs">Código fuente</a>.
+  <div>
+    Elaborado con <a href="https://www.qgis.org/">QGIS</a> y el complemento <a href="https://github.com/minorua/Qgis2threejs">Qgis2threejs</a>; renderizado con <a href="https://threejs.org/">three.js</a>.
+    <a href="https://github.com/faustoaguanor/visor-3d-qgis2threejs">Código fuente</a>.
+  </div>
 </footer>
 
 </body>

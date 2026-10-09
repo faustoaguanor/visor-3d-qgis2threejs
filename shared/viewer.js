@@ -15,6 +15,31 @@ var ViewerUI = (function () {
     document.getElementById("btn-help").onclick = function () { gui.showInfo(); };
   }
 
+  // Brújula SVG: la aguja apunta al norte (+Y de la escena) según la orientación de la cámara.
+  function initCompass(app) {
+    var el = document.getElementById("northarrow");
+    if (!el) return;
+    el.setAttribute("title", "Norte");
+    el.innerHTML =
+      '<svg viewBox="0 0 80 80" aria-label="Brújula">' +
+      '<circle cx="40" cy="40" r="38" class="c-ring"/>' +
+      '<g class="c-needle">' +
+      '<path d="M40 9 49 42H31z" class="c-n"/><path d="M40 71 49 42H31z" class="c-s"/>' +
+      '<circle cx="40" cy="42" r="2.5" class="c-pin"/>' +
+      '</g>' +
+      '<text x="40" y="8.5" text-anchor="middle" class="c-label">N</text>' +
+      '</svg>';
+    var needle = el.querySelector(".c-needle"), v = new THREE.Vector3();
+    var render = app.render;
+    function update() {
+      v.set(0, 1, 0).applyQuaternion(app.camera.quaternion.clone().inverse());
+      var deg = Math.atan2(v.x, v.y) * 180 / Math.PI;
+      needle.setAttribute("transform", "rotate(" + deg.toFixed(1) + " 40 42)");
+    }
+    app.render = function () { render.apply(app, arguments); update(); };
+    update();
+  }
+
   // Ajusta los controles de cámara: inercia, límites de distancia y de inclinación.
   // Con renderizado bajo demanda, la inercia necesita un bucle que llame a controls.update()
   // mientras dura el arrastre y un instante después.
@@ -81,5 +106,5 @@ var ViewerUI = (function () {
     return zMin <= zMax ? { min: zMin, max: zMax } : null;
   }
 
-  return { initAppbar: initAppbar, tuneControls: tuneControls, hideLoaderWhenReady: hideLoaderWhenReady, elevationRange: elevationRange };
+  return { initAppbar: initAppbar, initCompass: initCompass, tuneControls: tuneControls, hideLoaderWhenReady: hideLoaderWhenReady, elevationRange: elevationRange };
 })();

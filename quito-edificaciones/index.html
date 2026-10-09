@@ -156,6 +156,7 @@ var container = document.getElementById("view"),
 
 app.init(container);
 ViewerUI.initAppbar(app, gui);
+ViewerUI.initCompass(app);
 ViewerUI.tuneControls(app, { minDistance: 15, maxDistance: 3000, zoomSpeed: 0.8 });
 
 app.loadSceneFile("./data/index/scene.js", function (scene) {

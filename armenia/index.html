@@ -157,6 +157,7 @@ var container = document.getElementById("view"),
 
 app.init(container);
 ViewerUI.initAppbar(app, gui);
+ViewerUI.initCompass(app);
 
 app.loadSceneFile("./data/index/scene.js", function (scene) {
   app.start();
