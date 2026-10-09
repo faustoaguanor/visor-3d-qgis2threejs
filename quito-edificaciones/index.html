@@ -147,7 +147,7 @@
 <script>
 Q3D.Config.bgColor = null;    // lienzo transparente; el fondo lo dibuja el CSS
 Q3D.Config.northArrow.color = 0xd64545;
-Q3D.Config.viewpoint = {lookAt:{x:503323.2475480021,y:9981173.030125553,z:8.14048137719317e-15},pos:{x:501849.50228359585,y:9979902.234959522,z:3315.270114586279}};
+Q3D.Config.viewpoint = {lookAt:{x:502235.0,y:9980143.0,z:2800.0},pos:{x:501985.0,y:9979493.0,z:3320.0}};
 Q3D.Config.localMode = true;
 
 var container = document.getElementById("view"),
@@ -156,7 +156,7 @@ var container = document.getElementById("view"),
 
 app.init(container);
 ViewerUI.initAppbar(app, gui);
-ViewerUI.tuneControls(app, { minDistance: 20, maxDistance: 6000, zoomSpeed: 0.8 });
+ViewerUI.tuneControls(app, { minDistance: 15, maxDistance: 3000, zoomSpeed: 0.8 });
 
 app.loadSceneFile("./data/index/scene.js", function (scene) {
   app.start();

@@ -26,6 +26,8 @@ Tras exportar de nuevo desde QGIS, compacta `data/index/scene.js` (texturas PNG 
 python tools/optimize_scene.py armenia/data/index/scene.js 90
 ```
 
+Para Quito se usó además `--rellenar-sin-dato 0 --fondo ebebeb`: el MDS tenía celdas en 0 m fuera de la cobertura del ráster (el terreno está a ~2 800 m), lo que formaba un muro de 2,8 km y desorientaba la cámara. Se rellenan con la mediana de las celdas válidas y el margen blanco de la ortofoto se pinta del color de fondo.
+
 Con esto la escena de Quito pasó de 10,0 MB a 2,0 MB. Requiere Pillow.
 
 ## Uso
