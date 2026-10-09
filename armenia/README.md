@@ -38,13 +38,10 @@ Este proyecto implementa un visualizador 3D web para el Modelo Digital de Superf
 ## Estructura del proyecto
 
 ```
-MDS_ARMENIA/
-├── index.html                  # Aplicación web principal
-├── Qgis2threejs.css            # Estilos CSS personalizados
+armenia/
+├── index.html                  # Aplicación web principal (estilos en ../shared/)
 ├── Qgis2threejs.js             # Script principal de Qgis2threejs
 ├── dat-gui_panel.js            # Configuración del panel de control dat.GUI
-├── tools/
-│   └── optimize_scene.py       # Compacta la escena exportada (textura JPEG, JSON minificado)
 ├── dat-gui/                    # Librería dat.GUI
 │   └── dat.gui.min.js
 ├── threejs/                    # Librería Three.js y dependencias
@@ -96,7 +93,7 @@ Para actualizar o crear nuevos datos:
 6. **Optimizar la escena** (recomendado):
    ```bash
    pip install pillow
-   python tools/optimize_scene.py data/index/scene.js 95
+   python ../tools/optimize_scene.py data/index/scene.js 95
    ```
    Convierte la ortofoto embebida de PNG a JPEG 4:4:4 (calidad 95), redondea las cotas a
    centímetros y minifica el JSON. En este proyecto la escena pasó de 38 MB a 11 MB.

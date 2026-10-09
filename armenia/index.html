@@ -2,33 +2,33 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>MDS Sector Armenia · Visor 3D</title>
+<title>Modelo Digital de Superficie · Visor 3D</title>
 <meta name="description" content="Visor 3D interactivo del Modelo Digital de Superficie del sector Armenia.">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#14263f">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="data:,">
 <base target="_blank">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" type="text/css" href="./Qgis2threejs.css">
+<link rel="stylesheet" href="../shared/theme.css">
+<link rel="stylesheet" href="../shared/viewer.css">
 <script src="./threejs/three.min.js"></script>
 <script src="./threejs/OrbitControls.js"></script>
 <script src="./threejs/ViewHelper.js"></script>
 <script src="./Qgis2threejs.js"></script>
 <script src="./dat-gui/dat.gui.min.js"></script>
 <script src="./dat-gui_panel.js"></script>
+<script src="../shared/viewer.js"></script>
 </head>
-<body data-bg="gradient">
+<body>
 
-<!-- top bar -->
 <header class="appbar">
   <div class="appbar-brand">
-    <div class="appbar-mark" aria-hidden="true">
-      <svg viewBox="0 0 24 24"><path d="M2 19 9 8l4 6 3-4 6 9z"/></svg>
-    </div>
+    <a class="appbar-home" href="../" target="_self" title="Volver al inicio">
+      <svg viewBox="0 0 24 24"><path d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z"/></svg><span>Inicio</span>
+    </a>
+    <span class="appbar-sep" aria-hidden="true"></span>
     <div class="appbar-titles">
       <h1>Modelo Digital de Superficie</h1>
-      <p>Sector Armenia · Visor 3D</p>
+      <p>Sector Armenia</p>
     </div>
   </div>
   <nav class="appbar-actions">
@@ -52,14 +52,12 @@
   <div id="navigation"></div>
 </div>
 
-<!-- status bar -->
 <footer class="statusbar">
   <span id="stat-elev" class="stat"></span>
   <span class="stat stat-hint">Clic sobre el terreno para consultar coordenadas</span>
   <span class="stat stat-credits">QGIS · Qgis2threejs · three.js</span>
 </footer>
 
-<!-- loading overlay -->
 <div id="loader">
   <div class="loader-card">
     <div class="loader-spinner"></div>
@@ -148,7 +146,7 @@
 </div>
 
 <script>
-Q3D.Config.bgColor = null;    // transparent canvas, background is drawn by CSS
+Q3D.Config.bgColor = null;    // lienzo transparente; el fondo lo dibuja el CSS
 Q3D.Config.northArrow.color = 0xd64545;
 Q3D.Config.viewpoint = {lookAt:{x:504152.7,y:9971200.0,z:2470.0},pos:{x:504560.0,y:9969880.0,z:3360.0}};
 Q3D.Config.localMode = true;
@@ -157,66 +155,23 @@ var container = document.getElementById("view"),
     app = Q3D.application,
     gui = Q3D.gui;
 
-app.init(container);    // initialize viewer
+app.init(container);
+ViewerUI.initAppbar(app, gui);
 
-// top bar actions
-document.getElementById("btn-home").onclick = function () { app.controls.reset(); };
-document.getElementById("btn-rotate").onclick = function () {
-  app.setRotateAnimationMode(!app.controls.autoRotate);
-  this.classList.toggle("active", app.controls.autoRotate);
-};
-document.getElementById("btn-shot").onclick = function () { gui.showPrintDialog(); };
-document.getElementById("btn-help").onclick = function () { gui.showInfo(); };
-
-// elevation range of the DEM (ignoring no-data cells)
-function showElevationRange(scene) {
-  var noData = Q3D.Config.dem.noDataValue, zMin = Infinity, zMax = -Infinity;
-  for (var id in scene.mapLayers) {
-    (scene.mapLayers[id].blocks || []).forEach(function (b) {
-      var a = (b.data && b.data.grid) ? b.data.grid.array : [];
-      for (var i = 0; i < a.length; i++) {
-        if (a[i] === noData) continue;
-        if (a[i] < zMin) zMin = a[i];
-        if (a[i] > zMax) zMax = a[i];
-      }
-    });
-  }
-  if (zMin <= zMax) {
-    document.getElementById("stat-elev").innerHTML =
-      "Cota mín. <b>" + zMin.toFixed(1) + " m</b> · máx. <b>" + zMax.toFixed(1) + " m</b> · desnivel <b>" + (zMax - zMin).toFixed(1) + " m</b>";
-  }
-}
-
-// load the scene
 app.loadSceneFile("./data/index/scene.js", function (scene) {
-  // scene file has been loaded
   app.start();
-
   gui.dat.initLayersFolder(scene);
-
 }, function (scene) {
-  // all relevant files have been loaded
-  showElevationRange(scene);
+  var r = ViewerUI.elevationRange(scene);
+  if (r) {
+    document.getElementById("stat-elev").innerHTML =
+      "Cota mín. <b>" + r.min.toFixed(1) + " m</b> · máx. <b>" + r.max.toFixed(1) + " m</b> · desnivel <b>" + (r.max - r.min).toFixed(1) + " m</b>";
+  }
 
-  // hide the loading overlay once every texture has been decoded
-  (function waitTextures() {
-    var ready = true;
-    for (var id in scene.mapLayers) {
-      (scene.mapLayers[id].blocks || []).forEach(function (b) {
-        b.materials.forEach(function (m) { if (m && !m.loaded) ready = false; });
-      });
-    }
-    if (ready) {
-      app.render();
-      document.getElementById("loader").classList.add("done");
-    }
-    else setTimeout(waitTextures, 100);
-  })();
+  ViewerUI.hideLoaderWhenReady(app, scene);
 
   if (Q3D.Config.gui.customPlane) {
-    var zMin = undefined,
-        zMax = undefined;
-    gui.dat.initCustomPlaneFolder(zMin, zMax);
+    gui.dat.initCustomPlaneFolder(undefined, undefined);
   }
 });
 </script>

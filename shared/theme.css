@@ -1,0 +1,109 @@
+/*
+Tema compartido de los visores 3D (estilo sobrio, inspirado en los visores de Esri).
+Sin fuentes externas: se usa la pila tipográfica del sistema.
+*/
+
+:root {
+  --appbar-h: 48px;
+  --statusbar-h: 28px;
+
+  --blue: #0079c1;
+  --blue-hover: #00619b;
+  --blue-tint: #e8f2f9;
+
+  --surface: #ffffff;
+  --surface-2: #f4f4f4;
+  --surface-3: #ebebeb;
+  --border: #d4d4d4;
+  --text: #323232;
+  --text-muted: #6b6b6b;
+
+  --shadow: 0 1px 4px rgba(0, 0, 0, .3);
+  --radius: 2px;
+  --font: "Avenir Next", "Avenir", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface-3);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- barra superior ---------- */
+.appbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: var(--appbar-h);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 8px 0 4px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.appbar-brand { display: flex; align-items: center; gap: 4px; min-width: 0; }
+
+.appbar-home {
+  flex: none;
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 36px;
+  padding: 0 10px;
+  color: var(--blue);
+  font-size: 13px;
+  text-decoration: none;
+}
+.appbar-home svg { width: 16px; height: 16px; fill: currentColor; }
+.appbar-home:hover { background: var(--blue-tint); }
+
+.appbar-sep { flex: none; width: 1px; height: 24px; margin: 0 12px 0 4px; background: var(--border); }
+
+.appbar-titles { min-width: 0; display: flex; align-items: baseline; gap: 10px; }
+.appbar-titles h1 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.appbar-titles p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.appbar-actions { display: flex; gap: 2px; flex: none; }
+
+.appbar-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 36px;
+  padding: 0 10px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--text);
+  font: 13px/1 var(--font);
+  cursor: pointer;
+}
+.appbar-btn svg { width: 16px; height: 16px; fill: currentColor; }
+.appbar-btn:hover { background: var(--surface-2); }
+.appbar-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+.appbar-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+@media (max-width: 900px) {
+  .appbar-btn span, .appbar-titles p { display: none; }
+  .appbar-btn { padding: 0 9px; }
+}
+@media (max-width: 560px) {
+  .appbar-home span { display: none; }
+  .appbar-titles h1 { font-size: 14px; }
+}

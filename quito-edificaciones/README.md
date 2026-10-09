@@ -29,11 +29,9 @@ Este proyecto permite la visualización tridimensional de edificaciones de Quito
 ## Estructura del proyecto
 
 ```
-├── index.html                 # Archivo principal HTML
+├── index.html                 # Archivo principal HTML (estilos en ../shared/)
 ├── Qgis2threejs.js            # Script principal del visualizador
-├── Qgis2threejs.css           # Estilos del visualizador
 ├── dat-gui_panel.js           # Configuración del panel de controles
-├── logo.png                   # Logo del proyecto
 ├── threejs/                   # Librerías de Three.js
 │   ├── three.min.js
 │   ├── OrbitControls.js

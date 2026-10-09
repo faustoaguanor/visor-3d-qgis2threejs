@@ -4,10 +4,29 @@ Visores web 3D generados con QGIS + [Qgis2threejs](https://github.com/minorua/Qg
 
 | Visor | Carpeta | Descripción |
 |---|---|---|
-| MDS Armenia | [`armenia/`](armenia/) | Modelo Digital de Superficie del sector Armenia (v2.7 del plugin; incluye `tools/optimize_scene.py`). |
-| Edificaciones de Quito | [`quito-edificaciones/`](quito-edificaciones/) | Edificaciones 3D de Quito en UTM (v2.7.1 del plugin). |
+| MDS Armenia | [`armenia/`](armenia/) | Modelo Digital de Superficie del sector Armenia (plugin v2.7). |
+| Edificaciones de Quito | [`quito-edificaciones/`](quito-edificaciones/) | Edificaciones 3D de Quito en UTM (plugin v2.7.1). |
 
-Cada carpeta es independiente y usa su propia versión de las bibliotecas, porque el código exportado difiere entre ambos. Su README describe características, controles y estructura.
+Cada carpeta conserva su propia versión de las bibliotecas, porque el código exportado difiere entre ambos. Su README describe características, controles y estructura.
+
+```
+.
+├── index.html            # Portada con la lista de visores
+├── shared/               # Tema (theme.css, viewer.css) y lógica común (viewer.js)
+├── tools/                # optimize_scene.py: compacta la escena exportada
+├── armenia/
+└── quito-edificaciones/
+```
+
+## Optimizar una escena
+
+Tras exportar de nuevo desde QGIS, compacta `data/index/scene.js` (texturas PNG → JPEG, coordenadas a centímetros, JSON minificado):
+
+```bash
+python tools/optimize_scene.py armenia/data/index/scene.js 90
+```
+
+Con esto la escena de Quito pasó de 10,0 MB a 2,0 MB. Requiere Pillow.
 
 ## Uso
 

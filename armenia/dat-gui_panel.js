@@ -71,7 +71,7 @@ Q3D.gui.dat = {
       brightness: adj.brightness, contrast: adj.contrast, saturation: adj.saturation,
       azimuth: sun.azimuth, altitude: sun.altitude, sun: sun.intensity, ambient: sky.intensity
     };
-    var p = this.parameters.disp = Object.assign({ bg: "Degradado" }, defaults);
+    var p = this.parameters.disp = Object.assign({ bg: "Gris" }, defaults);
 
     var folder = panel.addFolder('Visualización'),
         imgFolder = folder.addFolder('Imagen'),
@@ -108,8 +108,8 @@ Q3D.gui.dat = {
     addSlider(sunFolder, 'sun', 0, 1.5, 0.01, 'Intensidad sol', onLight);
     addSlider(sunFolder, 'ambient', 0, 1.5, 0.01, 'Luz ambiente', onLight);
 
-    folder.add(p, 'bg', ['Degradado', 'Claro', 'Oscuro']).name('Fondo').onChange(function (v) {
-      document.body.dataset.bg = { 'Degradado': 'gradient', 'Claro': 'light', 'Oscuro': 'dark' }[v];
+    folder.add(p, 'bg', ['Gris', 'Claro', 'Oscuro']).name('Fondo').onChange(function (v) {
+      document.body.dataset.bg = { 'Gris': 'gray', 'Claro': 'light', 'Oscuro': 'dark' }[v];
     });
 
     folder.add({ r: function () {

@@ -1,28 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Edificaciones 3D</title>
+<title>Edificaciones 3D · Visor 3D</title>
+<meta name="description" content="Visor 3D interactivo de las edificaciones de Quito.">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="data:,">
 <base target="_blank">
-<link rel="stylesheet" type="text/css" href="./Qgis2threejs.css">
+<link rel="stylesheet" href="../shared/theme.css">
+<link rel="stylesheet" href="../shared/viewer.css">
 <script src="./threejs/three.min.js"></script>
 <script src="./threejs/OrbitControls.js"></script>
 <script src="./threejs/ViewHelper.js"></script>
 <script src="./Qgis2threejs.js"></script>
 <script src="./dat-gui/dat.gui.min.js"></script>
 <script src="./dat-gui_panel.js"></script>
+<script src="../shared/viewer.js"></script>
 </head>
 <body>
 
-  <div class=barra>
-    <img id="logo" src="logo.png" alt="Logo">
-    <h1>EDIFICACIONES 3D QUITO</h1>
+<header class="appbar">
+  <div class="appbar-brand">
+    <a class="appbar-home" href="../" target="_self" title="Volver al inicio">
+      <svg viewBox="0 0 24 24"><path d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z"/></svg><span>Inicio</span>
+    </a>
+    <span class="appbar-sep" aria-hidden="true"></span>
+    <div class="appbar-titles">
+      <h1>Edificaciones 3D</h1>
+      <p>Quito</p>
+    </div>
   </div>
+  <nav class="appbar-actions">
+    <button type="button" id="btn-home" class="appbar-btn" title="Vista inicial (Shift + R)">
+      <svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v10h-6v-6H9v6H3z"/></svg><span>Vista inicial</span>
+    </button>
+    <button type="button" id="btn-rotate" class="appbar-btn" title="Orbitar automáticamente (R)">
+      <svg viewBox="0 0 24 24"><path d="M12 5V2L8 6l4 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg><span>Orbitar</span>
+    </button>
+    <button type="button" id="btn-shot" class="appbar-btn" title="Guardar imagen (Shift + S)">
+      <svg viewBox="0 0 24 24"><path d="M9 3 7.2 5H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3zm3 5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z"/></svg><span>Captura</span>
+    </button>
+    <button type="button" id="btn-help" class="appbar-btn" title="Ayuda (I)">
+      <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-2h2zm2.1-7.7-.9.9c-.7.7-1.2 1.3-1.2 2.8h-2v-.5c0-1.1.5-2.1 1.2-2.8l1.2-1.3A2 2 0 1 0 10 9H8a4 4 0 1 1 7.1 1.3z"/></svg><span>Ayuda</span>
+    </button>
+  </nav>
+</header>
 
 <div id="view">
   <div id="northarrow"></div>
   <div id="navigation"></div>
+</div>
+
+<footer class="statusbar">
+  <span class="stat stat-hint">Clic sobre una edificación para consultar sus atributos</span>
+  <span class="stat stat-credits">QGIS · Qgis2threejs · three.js</span>
+</footer>
+
+<div id="loader">
+  <div class="loader-card">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Cargando modelo 3D…</div>
+  </div>
 </div>
 
 <!-- popup -->
@@ -35,7 +74,7 @@
     <!-- query result -->
     <div id="queryresult">
       <table id="qr_coords_table">
-        <caption>Coordenadas <div id="zoomtopoint" class="action-zoom zoombtn"></div></caption>
+        <caption>Coordenadas (X, Y, Z)<div id="zoomtopoint" class="action-zoom zoombtn"></div></caption>
         <tr><td id="qr_coords"></td></tr>
       </table>
 
@@ -49,40 +88,42 @@
       </table>
 
       <!-- camera actions and measure tool -->
-      <div id="orbitbtn" class="action-btn action-orbit">Orbitar</div>
-      <div id="measurebtn" class="action-btn">Medir Discanticia</div>
+      <div class="action-row">
+        <div id="orbitbtn" class="action-btn action-orbit">Orbitar</div>
+        <div id="measurebtn" class="action-btn">Medir distancia</div>
+      </div>
     </div>
 
     <!-- page info -->
     <div id="pageinfo">
-      <h1>Url</h1>
-      <div><input id="urlbox" type="text"></div>
+      <h1>URL de la vista actual</h1>
+      <div><input id="urlbox" type="text" readonly></div>
 
-      <h1>Uso</h1>
+      <h1>Navegación</h1>
       <table id="usage">
-        <tr><td colspan="2" class="star">Mouse</td></tr>
-        <tr><td>Botón izquierdo Mouse + Mover</td><td>Orbit</td></tr>
-        <tr><td>Rueda Mouse</td><td>Zoom</td></tr>
-        <tr><td>Botón derecho Mouse + Mover</td><td>Pan</td></tr>
+        <tr><td colspan="2" class="star">Ratón</td></tr>
+        <tr><td>Botón izquierdo + arrastrar</td><td>Orbitar</td></tr>
+        <tr><td>Rueda del ratón</td><td>Zoom</td></tr>
+        <tr><td>Botón derecho + arrastrar</td><td>Desplazar</td></tr>
 
-        <tr><td colspan="2" class="star">Teclas</td></tr>
-        <tr><td>Flechas</td><td>Mover Horizontalmente</td></tr>
-        <tr><td>Shift + Flechas</td><td>Orbitar</td></tr>
-        <tr><td>Ctrl + Flechas</td><td>Rotar</td></tr>
-        <tr><td>Shift + Ctrl + Up / Down</td><td>Zoom In / Out</td></tr>
-        <tr><td>L</td><td>Activar Etiquetas</td></tr>
-        <tr><td>R</td><td>Start / Stop Animacion</td></tr>
-        <tr><td>W</td><td>Modo Wireframe</td></tr>
-        <tr><td>Shift + R</td><td>Resetear Posicion de Camara</td></tr>
-        <tr><td>Shift + S</td><td>Salvar Imagen</td></tr>
+        <tr><td colspan="2" class="star">Teclado</td></tr>
+        <tr><td>Flechas</td><td>Desplazar horizontalmente</td></tr>
+        <tr><td>Shift + flechas</td><td>Orbitar</td></tr>
+        <tr><td>Ctrl + flechas</td><td>Rotar</td></tr>
+        <tr><td>Shift + Ctrl + ↑ / ↓</td><td>Acercar / alejar</td></tr>
+        <tr><td><kbd>L</kbd></td><td>Mostrar / ocultar etiquetas</td></tr>
+        <tr><td><kbd>R</kbd></td><td>Iniciar / detener órbita</td></tr>
+        <tr><td><kbd>W</kbd></td><td>Modo malla (wireframe)</td></tr>
+        <tr><td><kbd>Shift</kbd> + <kbd>R</kbd></td><td>Restablecer cámara</td></tr>
+        <tr><td><kbd>Shift</kbd> + <kbd>S</kbd></td><td>Guardar imagen</td></tr>
       </table>
 
-      <h1>About</h1>
+      <h1>Acerca de</h1>
       <div id="about">
-        Esta pagina fue hecha con <a href="https://www.qgis.org/">QGIS</a> y <a href="https://github.com/minorua/Qgis2threejs">Qgis2threejs</a> plugin (version 2.7.1).
-        <div>Desarrolado por <a href="https://threejs.org/">three.js</a>,
-        <a href="https://code.google.com/p/dat-gui/">dat-gui</a>
-        <span id="lib_proj4js"> and <a href="https://trac.osgeo.org/proj4js/">Proj4js</a></span>.</div>
+        Esta página fue elaborada con <a href="https://www.qgis.org/">QGIS</a> y el complemento <a href="https://github.com/minorua/Qgis2threejs">Qgis2threejs</a> (versión 2.7.1).
+        <div>Desarrollado con <a href="https://threejs.org/">three.js</a>,
+        <a href="https://github.com/dataarts/dat.gui">dat.GUI</a>
+        <span id="lib_proj4js"> y <a href="https://trac.osgeo.org/proj4js/">Proj4js</a></span>.</div>
       </div>
     </div>
   </div>
@@ -104,6 +145,8 @@
 </div>
 
 <script>
+Q3D.Config.bgColor = null;    // lienzo transparente; el fondo lo dibuja el CSS
+Q3D.Config.northArrow.color = 0xd64545;
 Q3D.Config.viewpoint = {lookAt:{x:503323.2475480021,y:9981173.030125553,z:8.14048137719317e-15},pos:{x:501849.50228359585,y:9979902.234959522,z:3315.270114586279}};
 Q3D.Config.localMode = true;
 
@@ -111,22 +154,18 @@ var container = document.getElementById("view"),
     app = Q3D.application,
     gui = Q3D.gui;
 
-app.init(container);    // initialize viewer
+app.init(container);
+ViewerUI.initAppbar(app, gui);
 
-// load the scene
 app.loadSceneFile("./data/index/scene.js", function (scene) {
-  // scene file has been loaded
   app.start();
-
   gui.dat.initLayersFolder(scene);
-
 }, function (scene) {
-  // all relevant files have been loaded
+
+  ViewerUI.hideLoaderWhenReady(app, scene);
 
   if (Q3D.Config.gui.customPlane) {
-    var zMin = undefined,
-        zMax = undefined;
-    gui.dat.initCustomPlaneFolder(zMin, zMax);
+    gui.dat.initCustomPlaneFolder(undefined, undefined);
   }
 });
 </script>
